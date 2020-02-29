@@ -9,6 +9,6 @@ public interface ProtobufService {
 
     void downloadPBFile(HttpServletResponse httpResponse);
 
-    ResponseEntity trainImage(MultipartFile multipartFile);
+    ResponseEntity uploadVideoAndTrain(MultipartFile multipartFile);
 
 }
