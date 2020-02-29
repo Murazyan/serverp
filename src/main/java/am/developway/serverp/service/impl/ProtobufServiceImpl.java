@@ -42,30 +42,35 @@ public class ProtobufServiceImpl implements ProtobufService {
 
     @Override
     public ResponseEntity trainImage(MultipartFile multipartFile) {
-        String[] command = {"cmd",};
-        HttpStatus status = HttpStatus.OK;
-        ServerResponse responseBody ;
-        Process process;
-        try {
-            process = Runtime.getRuntime().exec(command);
-            PrintWriter stdin = new PrintWriter(process.getOutputStream());
-            stdin.println("\"" + protobufPath + "\" \"" + input_file + "\" \"" + output_file + "\" -l eng");
-            stdin.close();
-            process.waitFor();
-            responseBody = ServerResponse.builder()
-                    .message("Ok")
-                    .success(true)
-                    .build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            responseBody= ServerResponse.builder()
-                    .message("Something went wrong!")
-                    .build();
-
-        }
-        return ResponseEntity.status(status).body(responseBody);
+        return null;
     }
+
+//    @Override
+//    public ResponseEntity trainImage(MultipartFile multipartFile) {
+//        String[] command = {"cmd",};
+//        HttpStatus status = HttpStatus.OK;
+//        ServerResponse responseBody ;
+//        Process process;
+//        try {
+//            process = Runtime.getRuntime().exec(command);
+//            PrintWriter stdin = new PrintWriter(process.getOutputStream());
+//            stdin.println("\"" + protobufPath + "\" \"" + input_file + "\" \"" + output_file + "\" -l eng");
+//            stdin.close();
+//            process.waitFor();
+//            responseBody = ServerResponse.builder()
+//                    .message("Ok")
+//                    .success(true)
+//                    .build();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            status = HttpStatus.INTERNAL_SERVER_ERROR;
+//            responseBody= ServerResponse.builder()
+//                    .message("Something went wrong!")
+//                    .build();
+//
+//        }
+//        return ResponseEntity.status(status).body(responseBody);
+//    }
 
 
 }
