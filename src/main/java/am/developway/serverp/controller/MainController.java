@@ -33,7 +33,8 @@ public class MainController {
      */
     @GetMapping("/pb")
     @ApiOperation("Download protobuf file")
-    public void downloadPBFile(HttpServletResponse httpResponse, @RequestParam(name = "animal-type")AnimalType animalType) {
+    public void downloadPBFile(HttpServletResponse httpResponse,
+                               @RequestParam(name = "animal-type")AnimalType animalType) {
         protobufService.downloadPBFile(httpResponse, animalType);
     }
 

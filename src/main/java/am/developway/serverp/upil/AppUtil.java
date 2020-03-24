@@ -17,16 +17,16 @@ public class AppUtil {
             PrintWriter stdin = new PrintWriter(process.getOutputStream());
             stdin.println(command);
             InputStream inputStream = process.getInputStream();
-            int i;
-            char c;
-            while((i = inputStream.read())!=-1) {
-
-                // converts integer to character
-                c = (char)i;
-
-                // prints character
-                System.out.print(c);
-            }
+//            int i;
+//            char c;
+//            while((i = inputStream.read())!=-1) {
+//
+//                // converts integer to character
+//                c = (char)i;
+//
+//                // prints character
+//                System.out.print(c);
+//            }
             stdin.close();
             process.waitFor();
         } catch (Exception e) {
