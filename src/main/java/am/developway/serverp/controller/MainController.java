@@ -1,6 +1,7 @@
 package am.developway.serverp.controller;
 
 import am.developway.serverp.dto.ServerResponse;
+import am.developway.serverp.model.AnimalType;
 import am.developway.serverp.service.ProtobufService;
 
 
@@ -32,8 +33,8 @@ public class MainController {
      */
     @GetMapping("/pb")
     @ApiOperation("Download protobuf file")
-    public void downloadPBFile(HttpServletResponse httpResponse) {
-        protobufService.downloadPBFile(httpResponse);
+    public void downloadPBFile(HttpServletResponse httpResponse, @RequestParam(name = "animal-type")AnimalType animalType) {
+        protobufService.downloadPBFile(httpResponse, animalType);
     }
 
 
@@ -46,9 +47,10 @@ public class MainController {
      */
     @PostMapping("/video")
     @ApiOperation("Train new image")
-    @ApiResponses({@ApiResponse(code = 200, message = "ok", response = ServerResponse.class)})
-    public ResponseEntity uploadVideoAndTrain(@RequestPart("file") MultipartFile multipartFile) {
-        return protobufService.uploadVideoAndTrain(multipartFile);
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "ok", response = ServerResponse.class)})
+    public ResponseEntity uploadVideoAndTrain(@RequestParam(name = "animal-type")AnimalType animalType, @RequestPart("file") MultipartFile multipartFile) {
+        return protobufService.uploadVideoAndTrain(multipartFile, animalType);
     }
 
 
