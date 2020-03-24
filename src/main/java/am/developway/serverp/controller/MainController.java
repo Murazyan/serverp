@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +32,8 @@ public class MainController {
      * @param httpResponse //
      * @created 15.02.2020
      */
-    @GetMapping("/pb")
-    @ApiOperation("Download protobuf file")
+    @GetMapping("/data")
+    @ApiOperation("Download data zip file")
     public void downloadPBFile(HttpServletResponse httpResponse,
                                @RequestParam(name = "animal-type")AnimalType animalType) {
         protobufService.downloadPBFile(httpResponse, animalType);
@@ -55,5 +56,14 @@ public class MainController {
     }
 
 
+
+    @GetMapping("/download-zip")
+    public ResponseEntity downloadsManyImageTest(@RequestParam(name = "animal-type")AnimalType animalType) {
+        byte[] bytes = protobufService.downloadZipFile( animalType);
+        return ResponseEntity.ok()
+                .contentLength(bytes.length)
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(bytes);
+    }
 
 }

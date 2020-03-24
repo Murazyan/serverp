@@ -12,4 +12,6 @@ public interface ProtobufService {
 
     ResponseEntity uploadVideoAndTrain(MultipartFile multipartFile, AnimalType animalType);
 
+    byte [] downloadZipFile( AnimalType animalType);
+
 }

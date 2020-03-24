@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 @Service
 public class ProtobufServiceImpl implements ProtobufService {
@@ -47,16 +48,37 @@ public class ProtobufServiceImpl implements ProtobufService {
     @Override
     public void downloadPBFile(HttpServletResponse response, AnimalType animalType) {
         response.setHeader("Content-Disposition", "attachment;filename="
-                + protobufFileName);
-
-        String filePath = protobufPath +animalType.name()+"/"+ protobufFileName;
+                + "data.zip");
+        String filePath = protobufPath +animalType.name()+"/"+ animalType.name()+"data.zip";
         File protobuf = new File(filePath);
         try {
             FileInputStream fileInputStream = new FileInputStream(protobuf);
-            IOUtils.copy(fileInputStream, response.getOutputStream());
+            org.apache.tomcat.util.http.fileupload.IOUtils.copy(fileInputStream, response.getOutputStream());
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
+
+    }
+
+
+
+    @Override
+    public byte [] downloadZipFile( AnimalType animalType) {
+        byte [] result;
+        try {
+            File zip = new File(protobufPath +animalType.name()+"/"+"data.zip");
+            FileInputStream fileInputStream = new FileInputStream(zip);
+            result = org.apache.commons.io.IOUtils.toByteArray(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            result=null;
+        }
+        return result;
+
+
     }
 
     @Override
@@ -77,6 +99,15 @@ public class ProtobufServiceImpl implements ProtobufService {
                     "2:24 PM\n" +
                     "python -m scripts.retrain \\--bottleneck_dir=tf_files/bottlenecks \\--how_many_training_steps=500 \\--model_dir=tf_files/models/ \\--summaries_dir=tf_files/training_summaries/mobilenet_0.50_224 \\--output_graph=tf_files"+"/"+animalType.name()+"/retrained_graph.pb \\--output_labels=tf_files"+"/"+animalType.name()+"/retrained_labels.txt \\--architecture=mobilenet_0.50_224 \\--image_dir=training_data/data/"+animalType.name();
             appUtil.runCommand(trainCommand);
+            String optimazedCmd="cd " +protobufPath+animalType.name()+"/ \n"+
+                    " toco \\--input_file=retrained_graph.pb \\--output_file="+animalType.name()+"_optimized_graph.tflite \\--input_format=TENSORFLOW_GRAPHDEF \\--output_format=TFLITE " +
+                    "\\--input_shape=1,224,224,3 " +
+                    "\\--input_array=input " +
+                    "\\--output_array=final_result " +
+                    "\\--inference_type=FLOAT " +
+                    "\\--input_data_type=FLOAT";
+            appUtil.runCommand(optimazedCmd);
+            appUtil.createZipFile(Arrays.asList(animalType.name()+"_optimized_graph.tflite","retrained_labels.txt"),protobufPath+animalType.name()+"/");
 
         } catch (IOException e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
